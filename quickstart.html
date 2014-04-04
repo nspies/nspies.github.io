@@ -1,0 +1,240 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Quick start &mdash; biorpy 0.9 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="biorpy 0.9 documentation" href="index.html"/>
+        <link rel="next" title="Installation" href="installation.html"/>
+        <link rel="prev" title="biorpy documentation" href="index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="fa fa-home"> biorpy</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="underpinnings.html">Gory details</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="underpinnings.html#module-biorpy.betteR">wrapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="underpinnings.html#module-biorpy.conversion">conversion</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">biorpy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Quick start</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/quickstart.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="quick-start">
+<h1>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
+<p>biorpy provides an easy interface to R from python, wrapping the lower-level functionality provided by the rpy2 python package. To start, you&#8217;ll need to ensure that R, rpy2, biorpy, numpy and pandas are all installed. The examples.py script included in the biorpy distribution is a good example of the one- or few-line commands that can be issued to produce full-featured R plots.</p>
+<p>To start:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">biorpy</span> <span class="kn">import</span> <span class="n">r</span>
+
+<span class="gp">In [2]: </span><span class="n">r</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
+<span class="gr">Out[2]: </span><span class="n">rpy2</span><span class="o">.</span><span class="n">rinterface</span><span class="o">.</span><span class="n">NULL</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<img alt="_images/plot1.png" src="_images/plot1.png" />
+</div>
+<p>The plot appear in an interactive window (an X11 device on the Mac). We can use any of the standard R arguments to the <tt class="docutils literal"><span class="pre">plot</span></tt> function, for example to add color to the points and labels to the axes and the plot:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [3]: </span><span class="n">r</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="n">cex</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;green&quot;</span><span class="p">],</span>
+<span class="gp">   ...:</span>         <span class="n">xlab</span><span class="o">=</span><span class="s">&quot;length&quot;</span><span class="p">,</span> <span class="n">ylab</span><span class="o">=</span><span class="s">&quot;width&quot;</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="s">&quot;Length vs Width&quot;</span><span class="p">)</span>
+<span class="gp">   ...:</span> 
+<span class="gr">Out[3]: </span><span class="n">rpy2</span><span class="o">.</span><span class="n">rinterface</span><span class="o">.</span><span class="n">NULL</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<img alt="_images/plot2.png" src="_images/plot2.png" />
+</div>
+<p>Some R functions expect a <tt class="docutils literal"><span class="pre">data.frame</span></tt> as input. biorpy transparently converts pandas <tt class="docutils literal"><span class="pre">DataFrame</span></tt> to R <tt class="docutils literal"><span class="pre">data.frame</span></tt>:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [4]: </span><span class="kn">import</span> <span class="nn">pandas</span>
+
+<span class="gp">In [5]: </span><span class="n">dataFrame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">&quot;x&quot;</span><span class="p">:</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="s">&quot;y&quot;</span><span class="p">:[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">52</span><span class="p">]})</span>
+
+<span class="gp">In [6]: </span><span class="k">print</span> <span class="n">dataFrame</span>
+<span class="go">   x   y</span>
+<span class="go">0  0  12</span>
+<span class="go">1  1  21</span>
+<span class="go">2  2  35</span>
+<span class="go">3  3  40</span>
+<span class="go">4  4  52</span>
+
+<span class="go">[5 rows x 2 columns]</span>
+
+<span class="gp">In [7]: </span><span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">dataFrame</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<img alt="_images/boxplot1.png" src="_images/boxplot1.png" />
+</div>
+<p>Here you also see another little trick used in rpy2 and biorpy: because names can contain periods (&#8221;.&#8221;) in R, but not in python, you can access functions containing a period using the dictionary-like access, <tt class="docutils literal"><span class="pre">r[&quot;wilcox.test&quot;]</span></tt>.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [8]: </span><span class="n">wilcoxResult</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s">&quot;wilcox.test&quot;</span><span class="p">](</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">120</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The output from R functions is by default returned exactly as if from rpy2. (The exception to this is if the object is an R <tt class="docutils literal"><span class="pre">data.frame</span></tt>, which gets converted directly to a pandas DataFrame.) Because everything in R is a type of vector, and vectors are not standard data types in python, these returned objects can look pretty odd. biorpy adds a convenience variable, <tt class="docutils literal"><span class="pre">.py</span></tt>, to each result from R, which behaves like a dictionary or an object (depending on your preference):</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [9]: </span><span class="n">wilcoxResult</span><span class="o">.</span><span class="n">py</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gr">Out[9]: </span>
+<span class="go">[&#39;statistic&#39;,</span>
+<span class="go"> &#39;parameter&#39;,</span>
+<span class="go"> &#39;p.value&#39;,</span>
+<span class="go"> &#39;null.value&#39;,</span>
+<span class="go"> &#39;alternative&#39;,</span>
+<span class="go"> &#39;method&#39;,</span>
+<span class="go"> &#39;data.name&#39;]</span>
+
+<span class="gp">In [10]: </span><span class="n">wilcoxResult</span><span class="o">.</span><span class="n">py</span><span class="o">.</span><span class="n">method</span>
+<span class="gr">Out[10]: </span>
+<span class="go">array([&#39;Wilcoxon rank sum test&#39;], </span>
+<span class="go">      dtype=&#39;|S22&#39;)</span>
+
+<span class="gp">In [11]: </span><span class="n">wilcoxResult</span><span class="o">.</span><span class="n">py</span><span class="p">[</span><span class="s">&quot;p.value&quot;</span><span class="p">]</span>
+<span class="gr">Out[11]: </span><span class="n">array</span><span class="p">([</span>  <span class="mf">6.65667832e-08</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">wilcoxResult.py</span></tt> attribute will perform some amount of conversion between dotted and non-dotted attribute names, so it will understand both <tt class="docutils literal"><span class="pre">wilcoxResult.py.pvalue</span></tt> or <tt class="docutils literal"><span class="pre">wilcoxResult.py[&quot;p.value&quot;]</span></tt>.</p>
+<p>Items in <tt class="docutils literal"><span class="pre">.py</span></tt> are converted into pandas DataFrames or numpy arrays where possible.</p>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="biorpy documentation"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Noah Spies, Yarden Katz.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

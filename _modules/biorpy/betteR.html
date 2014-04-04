@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>biorpy.betteR &mdash; biorpy 0.9 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="biorpy 0.9 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../../index.html" class="fa fa-home"> biorpy</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../underpinnings.html">Gory details</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../underpinnings.html#module-biorpy.betteR">wrapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../underpinnings.html#module-biorpy.conversion">conversion</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">biorpy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>biorpy.betteR</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <h1>Source code for biorpy.betteR</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">pydoc</span>
+<span class="kn">from</span> <span class="nn">rpy2</span> <span class="kn">import</span> <span class="n">robjects</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+
+<span class="kn">from</span> <span class="nn">biorpy.conversion</span> <span class="kn">import</span> <span class="n">convertToR</span><span class="p">,</span> <span class="n">addResultWrapper</span>
+
+<span class="k">def</span> <span class="nf">isIPy</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">__IPYTHON__</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+<span class="k">def</span> <span class="nf">isInteractive</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">__main__</span> <span class="kn">as</span> <span class="nn">main</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">main</span><span class="p">,</span> <span class="s">&#39;__file__&#39;</span><span class="p">)</span>
+
+
+<span class="c">## DEFAULT ARGS, OUTPUT HANDLING</span>
+
+<div class="viewcode-block" id="rx"><a class="viewcode-back" href="../../underpinnings.html#biorpy.betteR.rx">[docs]</a><span class="k">def</span> <span class="nf">rx</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; extracts a value by name from an R object &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f</span>
+</div>
+<div class="viewcode-block" id="item"><a class="viewcode-back" href="../../underpinnings.html#biorpy.betteR.item">[docs]</a><span class="k">def</span> <span class="nf">item</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Short name for operator.itemgetter() &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+
+</div>
+<span class="k">def</span> <span class="nf">getDefaultHandlers</span><span class="p">(</span><span class="n">converter</span><span class="p">):</span>
+    <span class="n">handlers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">handlers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Handler</span><span class="p">(</span><span class="s">&quot;wilcox.test&quot;</span><span class="p">,</span> 
+        <span class="c"># outputs={&quot;p.value&quot;:[rx(&quot;p.value&quot;), item(0), item(0)]},</span>
+        <span class="n">converter</span><span class="o">=</span><span class="n">converter</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">handlers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Handler</span><span class="p">(</span><span class="s">&quot;plot&quot;</span><span class="p">,</span> 
+        <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;xlab&quot;</span><span class="p">:</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;ylab&quot;</span><span class="p">:</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;main&quot;</span><span class="p">:</span><span class="s">&quot;&quot;</span><span class="p">},</span>
+        <span class="n">converter</span><span class="o">=</span><span class="n">converter</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">handlers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Handler</span><span class="p">(</span><span class="s">&quot;hist&quot;</span><span class="p">,</span> 
+        <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;xlab&quot;</span><span class="p">:</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;main&quot;</span><span class="p">:</span><span class="s">&quot;&quot;</span><span class="p">},</span>
+        <span class="n">converter</span><span class="o">=</span><span class="n">converter</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">handlers</span>
+
+<span class="k">def</span> <span class="nf">getDefaultAliases</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&quot;devoff&quot;</span><span class="p">:</span><span class="s">&quot;dev.off&quot;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="Handler"><a class="viewcode-back" href="../../underpinnings.html#biorpy.betteR.Handler">[docs]</a><span class="k">class</span> <span class="nc">Handler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Wrapper for R objects to implement:</span>
+<span class="sd">    </span>
+<span class="sd">    1. default arguments</span>
+<span class="sd">    2. argument conversion</span>
+<span class="sd">    3. output conversion</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Handler.__init__"><a class="viewcode-back" href="../../underpinnings.html#biorpy.betteR.Handler.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rname</span><span class="p">,</span> <span class="n">pyname</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="n">convertToR</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args</span>
+<span class="sd">            name: name of the R function</span>
+<span class="sd">            defaults: a dictionary of default arguments to the function</span>
+<span class="sd">            outputs: a dictionary whose values are lists of functions used to extract values from </span>
+<span class="sd">                the return R value. For example: {&quot;p.value&quot;:[rx(&quot;p.value&quot;), item(0), item(0)]}</span>
+<span class="sd">            converter: a conversion function used to convert python objects into R objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rname</span> <span class="o">=</span> <span class="n">rname</span>
+        <span class="k">if</span> <span class="n">pyname</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pyname</span> <span class="o">=</span> <span class="n">rname</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pyname</span> <span class="o">=</span> <span class="n">pyname</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span> <span class="o">=</span> <span class="n">defaults</span> <span class="k">if</span> <span class="n">defaults</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="c"># self.outputs = outputs if outputs else {}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
+
+        <span class="c"># may want some extra error checking here</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_robject</span> <span class="o">=</span> <span class="n">robjects</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rname</span><span class="p">]</span>
+</div>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">):</span>
+        <span class="c"># python -&gt; R conversion</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">kwd</span> <span class="ow">in</span> <span class="n">kwdargs</span><span class="p">:</span>
+            <span class="n">kwdargs</span><span class="p">[</span><span class="n">kwd</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">(</span><span class="n">kwdargs</span><span class="p">[</span><span class="n">kwd</span><span class="p">])</span>
+
+        <span class="c"># default arguments</span>
+        <span class="n">defaults</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">defaults</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwdargs</span><span class="p">)</span>
+
+        <span class="c"># call R</span>
+        <span class="n">rval</span> <span class="o">=</span> <span class="n">robjects</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rname</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">defaults</span><span class="p">)</span>
+        <span class="c">#rval = super(Handler, self).__call__(*args, **defaults)</span>
+
+        <span class="c"># output conversion</span>
+        <span class="n">addResultWrapper</span><span class="p">(</span><span class="n">rval</span><span class="p">)</span>
+
+        <span class="c"># if self.outputs:</span>
+        <span class="c">#     result = {}</span>
+
+        <span class="c">#     for output in self.outputs:</span>
+        <span class="c">#         result[output] = reduce(lambda x, f: f(x), self.outputs[output], rval)</span>
+
+        <span class="c">#     rval.py = result</span>
+        <span class="k">return</span> <span class="n">rval</span>
+
+<div class="viewcode-block" id="Handler.help"><a class="viewcode-back" href="../../underpinnings.html#biorpy.betteR.Handler.help">[docs]</a>    <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Displays the R help for the current object &quot;&quot;&quot;</span>
+
+        <span class="n">pydoc</span><span class="o">.</span><span class="n">pager</span><span class="p">(</span><span class="n">robjects</span><span class="o">.</span><span class="n">help</span><span class="o">.</span><span class="n">pages</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rname</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_docstring</span><span class="p">())</span>
+
+    <span class="c"># @property</span>
+    <span class="c"># def __doc__(self):</span>
+    <span class="c">#     return str(robjects.r.help(self.rname))</span>
+
+</div></div>
+<div class="viewcode-block" id="BetteR"><a class="viewcode-back" href="../../underpinnings.html#biorpy.betteR.BetteR">[docs]</a><span class="k">class</span> <span class="nc">BetteR</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Wrapper for rpy2.robjects.R &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BetteR.__init__"><a class="viewcode-back" href="../../underpinnings.html#biorpy.betteR.BetteR.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="n">convertToR</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize the RPy2 wrapper instance &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span> <span class="o">=</span> <span class="n">getDefaultAliases</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handlers</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">getDefaultHandlers</span><span class="p">(</span><span class="n">converter</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addHandler_</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">isInteractive</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initInteractive</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="BetteR.initInteractive"><a class="viewcode-back" href="../../underpinnings.html#biorpy.betteR.BetteR.initInteractive">[docs]</a>    <span class="k">def</span> <span class="nf">initInteractive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Checks to see if we&#39;re running interactively (eg ipython), and if so, </span>
+<span class="sd">        starts the event manager in RPy2. (This allows resizing of interactive </span>
+<span class="sd">        plot windows.) &quot;&quot;&quot;</span>
+        <span class="c"># This allows graphics windows to be resized</span>
+        <span class="kn">from</span> <span class="nn">rpy2.interactive</span> <span class="kn">import</span> <span class="n">process_revents</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">process_revents</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="c"># this can occur when we&#39;ve already called process_revents.start()</span>
+            <span class="c"># in any case, it&#39;s not a big deal if the above didn&#39;t work</span>
+            <span class="c"># so let&#39;s ignore the error</span>
+            <span class="k">pass</span>
+
+</div>
+<div class="viewcode-block" id="BetteR.addHandler_"><a class="viewcode-back" href="../../underpinnings.html#biorpy.betteR.BetteR.addHandler_">[docs]</a>    <span class="k">def</span> <span class="nf">addHandler_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add a :class:`biorpy.betteR.Handler`.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handlers</span><span class="p">[</span><span class="n">handler</span><span class="o">.</span><span class="n">pyname</span><span class="p">]</span> <span class="o">=</span> <span class="n">handler</span>
+
+</div>
+    <span class="k">def</span> <span class="nf">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">BetteR</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">ae</span><span class="p">:</span>
+            <span class="n">orig_ae</span> <span class="o">=</span> <span class="n">ae</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getitem__</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">orig_ae</span>
+
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span><span class="p">:</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;gg&quot;</span><span class="p">):</span>
+            <span class="k">print</span> <span class="s">&quot;do something for ggplot...&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handlers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_handlers</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">Handler</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handlers</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span>
+
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="n">rval</span> <span class="o">=</span> <span class="n">robjects</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="n">addResultWrapper</span><span class="p">(</span><span class="n">rval</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">rval</span>
+
+
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">BetteR</span><span class="p">()</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s">&quot;wilcox.test&quot;</span><span class="p">](</span><span class="n">robjects</span><span class="o">.</span><span class="n">FloatVector</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)),</span> <span class="n">robjects</span><span class="o">.</span><span class="n">FloatVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">55</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">]))</span>
+    <span class="k">print</span> <span class="n">result</span><span class="o">.</span><span class="n">py</span><span class="p">[</span><span class="s">&quot;p.value&quot;</span><span class="p">]</span>
+
+    <span class="c">#r.plot(robjects.FloatVector(range(5)), robjects.FloatVector([1,2,55,3,6]))</span>
+
+    <span class="n">r</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mf">4.5</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="n">col</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;red&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100000</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+            <span class="k">pass</span>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Noah Spies, Yarden Katz.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

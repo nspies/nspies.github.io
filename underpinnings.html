@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Gory details &mdash; biorpy 0.9 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="biorpy 0.9 documentation" href="index.html"/>
+        <link rel="prev" title="Plotting" href="plotting.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="fa fa-home"> biorpy</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Gory details</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-biorpy.betteR">wrapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-biorpy.conversion">conversion</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">biorpy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Gory details</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/underpinnings.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="gory-details">
+<h1>Gory details<a class="headerlink" href="#gory-details" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-biorpy.betteR">
+<span id="wrapper"></span><h2>wrapper<a class="headerlink" href="#module-biorpy.betteR" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="biorpy.betteR.BetteR">
+<em class="property">class </em><tt class="descclassname">biorpy.betteR.</tt><tt class="descname">BetteR</tt><big>(</big><em>converter=&lt;function convertToR at 0x1099310c8&gt;</em><big>)</big><a class="reference internal" href="_modules/biorpy/betteR.html#BetteR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.betteR.BetteR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for rpy2.robjects.R</p>
+<dl class="method">
+<dt id="biorpy.betteR.BetteR.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>converter=&lt;function convertToR at 0x1099310c8&gt;</em><big>)</big><a class="reference internal" href="_modules/biorpy/betteR.html#BetteR.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.betteR.BetteR.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the RPy2 wrapper instance</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="biorpy.betteR.BetteR.addHandler_">
+<tt class="descname">addHandler_</tt><big>(</big><em>handler</em><big>)</big><a class="reference internal" href="_modules/biorpy/betteR.html#BetteR.addHandler_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.betteR.BetteR.addHandler_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a <a class="reference internal" href="#biorpy.betteR.Handler" title="biorpy.betteR.Handler"><tt class="xref py py-class docutils literal"><span class="pre">biorpy.betteR.Handler</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="biorpy.betteR.BetteR.initInteractive">
+<tt class="descname">initInteractive</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/biorpy/betteR.html#BetteR.initInteractive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.betteR.BetteR.initInteractive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see if we&#8217;re running interactively (eg ipython), and if so,
+starts the event manager in RPy2. (This allows resizing of interactive
+plot windows.)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="biorpy.betteR.Handler">
+<em class="property">class </em><tt class="descclassname">biorpy.betteR.</tt><tt class="descname">Handler</tt><big>(</big><em>rname</em>, <em>pyname=None</em>, <em>defaults=None</em>, <em>converter=&lt;function convertToR at 0x1099310c8&gt;</em><big>)</big><a class="reference internal" href="_modules/biorpy/betteR.html#Handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.betteR.Handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for R objects to implement:</p>
+<ol class="arabic simple">
+<li>default arguments</li>
+<li>argument conversion</li>
+<li>output conversion</li>
+</ol>
+<dl class="method">
+<dt id="biorpy.betteR.Handler.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>rname</em>, <em>pyname=None</em>, <em>defaults=None</em>, <em>converter=&lt;function convertToR at 0x1099310c8&gt;</em><big>)</big><a class="reference internal" href="_modules/biorpy/betteR.html#Handler.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.betteR.Handler.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; name of the R function</li>
+<li><strong>defaults</strong> &#8211; a dictionary of default arguments to the function</li>
+<li><strong>outputs</strong> &#8211; a dictionary whose values are lists of functions used to extract values from
+the return R value. For example: {&#8220;p.value&#8221;:[rx(&#8220;p.value&#8221;), item(0), item(0)]}</li>
+<li><strong>converter</strong> &#8211; a conversion function used to convert python objects into R objects</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biorpy.betteR.Handler.help">
+<tt class="descname">help</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/biorpy/betteR.html#Handler.help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.betteR.Handler.help" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays the R help for the current object</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.betteR.item">
+<tt class="descclassname">biorpy.betteR.</tt><tt class="descname">item</tt><big>(</big><em>i</em><big>)</big><a class="reference internal" href="_modules/biorpy/betteR.html#item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.betteR.item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short name for operator.itemgetter()</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.betteR.rx">
+<tt class="descclassname">biorpy.betteR.</tt><tt class="descname">rx</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/biorpy/betteR.html#rx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.betteR.rx" title="Permalink to this definition">¶</a></dt>
+<dd><p>extracts a value by name from an R object</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-biorpy.conversion">
+<span id="conversion"></span><h2>conversion<a class="headerlink" href="#module-biorpy.conversion" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="biorpy.conversion.ResultWrapper">
+<em class="property">class </em><tt class="descclassname">biorpy.conversion.</tt><tt class="descname">ResultWrapper</tt><big>(</big><em>result</em><big>)</big><a class="reference internal" href="_modules/biorpy/conversion.html#ResultWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.conversion.ResultWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents output from R as a dictionary-like object, with conversion of each value
+to a pandas DataFrame or a numpy.array if possible</p>
+<p>Attributes that contain a period in R can usually be accessed directly from python by omitting the period
+(eg, &#8216;p.value&#8217; can be accessed from &#8216;pvalue&#8217;)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.conversion.convertToR">
+<tt class="descclassname">biorpy.conversion.</tt><tt class="descname">convertToR</tt><big>(</big><em>obj</em><big>)</big><a class="reference internal" href="_modules/biorpy/conversion.html#convertToR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.conversion.convertToR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert Pandas/Numpy objects to R objects.</p>
+<p>If the inumpyut object is a Pandas DataFrame, convert it to
+an R DataFrame.  If it&#8217;s a Series, treat it like a vector/numpy
+array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.conversion.pandasDataFrameToRPy2DataFrame">
+<tt class="descclassname">biorpy.conversion.</tt><tt class="descname">pandasDataFrameToRPy2DataFrame</tt><big>(</big><em>df</em>, <em>strings_as_factors=False</em><big>)</big><a class="reference internal" href="_modules/biorpy/conversion.html#pandasDataFrameToRPy2DataFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.conversion.pandasDataFrameToRPy2DataFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a pandas DataFrame to a R data.frame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; The DataFrame being converted</li>
+<li><strong>strings_as_factors</strong> &#8211; Whether to turn strings into R factors (default: False)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An R data.frame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="plotting.html" class="btn btn-neutral" title="Plotting"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Noah Spies, Yarden Katz.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

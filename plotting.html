@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Plotting &mdash; biorpy 0.9 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="biorpy 0.9 documentation" href="index.html"/>
+        <link rel="next" title="Gory details" href="underpinnings.html"/>
+        <link rel="prev" title="Installation" href="installation.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="fa fa-home"> biorpy</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="underpinnings.html">Gory details</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="underpinnings.html#module-biorpy.betteR">wrapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="underpinnings.html#module-biorpy.conversion">conversion</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">biorpy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Plotting</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/plotting.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="module-biorpy.plotting">
+<span id="plotting"></span><h1>Plotting<a class="headerlink" href="#module-biorpy.plotting" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="biorpy.plotting.barPlot">
+<tt class="descclassname">biorpy.plotting.</tt><tt class="descname">barPlot</tt><big>(</big><em>dict_</em>, <em>keysInOrder=None</em>, <em>printCounts=True</em>, <em>ylim=None</em>, <em>*args</em>, <em>**kwdargs</em><big>)</big><a class="reference internal" href="_modules/biorpy/plotting.html#barPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.plotting.barPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a bar plot</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dict</strong> &#8211; a dictionary of name -&gt; value, where value is the height of the bar
+use a collections.OrderedDict() to easily convey the order of the groups</li>
+<li><strong>keysInOrder</strong> &#8211; an optional ordering of the keys in <a href="#id1"><span class="problematic" id="id2">dict_</span></a> (alternate option to using collections.OrderedDict)</li>
+<li><strong>printCounts</strong> &#8211; option to print the counts on top of each bar</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>additional kwdargs are passed directly to r.barplot()</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.plotting.boxPlot">
+<tt class="descclassname">biorpy.plotting.</tt><tt class="descname">boxPlot</tt><big>(</big><em>dict_</em>, <em>keysInOrder=None</em>, <em>**kwdargs</em><big>)</big><a class="reference internal" href="_modules/biorpy/plotting.html#boxPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.plotting.boxPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a boxplot</p>
+<dl class="docutils">
+<dt><a href="#id3"><span class="problematic" id="id4">dict_</span></a>: a dictionary of group_name -&gt; vector, where vector is the data points to be plotted for each group;</dt>
+<dd>use a collections.OrderedDict() to easily convey the order of the groups</dd>
+</dl>
+<p>keysInOrder: an optional ordering of the keys in <a href="#id5"><span class="problematic" id="id6">dict_</span></a> (alternate option to using collections.OrderedDict)</p>
+<p>additional <tt class="docutils literal"><span class="pre">kwdargs</span></tt> are passed directly to <tt class="docutils literal"><span class="pre">r.boxplot()</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.plotting.ecdf">
+<tt class="descclassname">biorpy.plotting.</tt><tt class="descname">ecdf</tt><big>(</big><em>vectors, labels, colors=['red', 'blue', 'orange', 'violet', 'green', 'brown'], xlab='', ylab='cumulative fraction', main='', legendWhere='topleft', lty=1, lwd=1, **ecdfKwdArgs</em><big>)</big><a class="reference internal" href="_modules/biorpy/plotting.html#ecdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.plotting.ecdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a list of lists, convert them to vectors, and plots them sequentially on a CDF</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.plotting.errbars">
+<tt class="descclassname">biorpy.plotting.</tt><tt class="descname">errbars</tt><big>(</big><em>x=None</em>, <em>y=None</em>, <em>x_lower=None</em>, <em>x_upper=None</em>, <em>y_lower=None</em>, <em>y_upper=None</em>, <em>length=0.08</em>, <em>*args</em>, <em>**kwdargs</em><big>)</big><a class="reference internal" href="_modules/biorpy/plotting.html#errbars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.plotting.errbars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws error bars on top of an existing plot</p>
+<p>specify EITHER: (y, x_lower and x_upper) OR (x, y_lower, y_upper)
+y: the y coordinate of each data point
+x_lower: the left coordinate of the error bar
+x_upper: the right coordinate of the error bar</p>
+<p>similarly for <cite>x</cite>, <cite>y_lower</cite> and <cite>y_upper</cite>
+uses the r.arrows() command, and passes any additional keyword args to r.arrows()</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.plotting.plotMulti">
+<tt class="descclassname">biorpy.plotting.</tt><tt class="descname">plotMulti</tt><big>(</big><em>xs</em>, <em>ys</em>, <em>names</em>, <em>colors=None</em>, <em>legendWhere='bottomright'</em>, <em>xlab=''</em>, <em>ylab=''</em>, <em>plotArgs=None</em>, <em>lineArgs=None</em>, <em>**kwdargs</em><big>)</big><a class="reference internal" href="_modules/biorpy/plotting.html#plotMulti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.plotting.plotMulti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot multiple lines on the same axes; convenience function for calling
+r.plot() and then r.lines() (possibly multiple times) and adding an r.legend()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xs</strong> &#8211; a list of vectors of x values, one vector for each dataset to be plotted</li>
+<li><strong>ys</strong> &#8211; a list of vectors of y values, as above, in the same order</li>
+<li><strong>names</strong> &#8211; the names of each dataset, used for putting together the legend</li>
+<li><strong>colors</strong> &#8211; an optional list of colors (html hex style)</li>
+<li><strong>legendWhere</strong> &#8211; the location parameter used to specify positioning of the legend (a combination
+of bottom/top and right/left)</li>
+<li><strong>plotArgs</strong> &#8211; an optional dictionary of arguments to r.plot(), for example xlim=[0,3]</li>
+<li><strong>lineArgs</strong> &#8211; an option dictionary of arguments to r.lines()</li>
+<li><strong>kwdArgs</strong> &#8211; optional R plotting arguments can be passed in as keyword arguments [ie, plotMulti(xs, ys, names, lty=3)]
+to specify parameters for both the r.plot() and r.lines() commands</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.plotting.plotWithCor">
+<tt class="descclassname">biorpy.plotting.</tt><tt class="descname">plotWithCor</tt><big>(</big><em>x</em>, <em>y</em>, <em>method='spearman'</em>, <em>main=''</em>, <em>**kwdargs</em><big>)</big><a class="reference internal" href="_modules/biorpy/plotting.html#plotWithCor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.plotting.plotWithCor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the correlation coefficient to the title of a scatterplot</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.plotting.plotWithFit">
+<tt class="descclassname">biorpy.plotting.</tt><tt class="descname">plotWithFit</tt><big>(</big><em>x</em>, <em>y</em>, <em>main=''</em>, <em>fitkwdargs=None</em>, <em>**plotkwdargs</em><big>)</big><a class="reference internal" href="_modules/biorpy/plotting.html#plotWithFit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.plotting.plotWithFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots data and adds a linear best fit line to the scatterplot</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fitkwdargs</strong> &#8211; a dictionary with r.line() drawing parameters for the fit line
+additional keyword arguments arg passed directly to r.plot()</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="biorpy.plotting.scatterplotMatrix">
+<tt class="descclassname">biorpy.plotting.</tt><tt class="descname">scatterplotMatrix</tt><big>(</big><em>dataFrame</em>, <em>main=''</em>, <em>**kwdargs</em><big>)</big><a class="reference internal" href="_modules/biorpy/plotting.html#scatterplotMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biorpy.plotting.scatterplotMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a scatterplot matrix, with scatterplots in the upper left and correlation
+values in the lower right. Input is a pandas DataFrame.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="underpinnings.html" class="btn btn-neutral float-right" title="Gory details"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral" title="Installation"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Noah Spies, Yarden Katz.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

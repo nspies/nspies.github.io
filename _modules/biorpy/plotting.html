@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>biorpy.plotting &mdash; biorpy 0.9 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="biorpy 0.9 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../../index.html" class="fa fa-home"> biorpy</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../underpinnings.html">Gory details</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../underpinnings.html#module-biorpy.betteR">wrapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../underpinnings.html#module-biorpy.conversion">conversion</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">biorpy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>biorpy.plotting</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <h1>Source code for biorpy.plotting</h1><div class="highlight"><pre>
+<span class="c">##</span>
+<span class="c">## biorpy plotting wrappers</span>
+<span class="c">##</span>
+<span class="c">## nspies in ze house</span>
+<span class="c">##</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">import</span> <span class="nn">rpy2</span>
+
+<span class="c">#from rpy2.robjects import r</span>
+<span class="kn">from</span> <span class="nn">biorpy.betteR</span> <span class="kn">import</span> <span class="n">BetteR</span>
+<span class="kn">import</span> <span class="nn">rpy2.robjects.numpy2ri</span>
+<span class="kn">from</span> <span class="nn">rpy2</span> <span class="kn">import</span> <span class="n">robjects</span> <span class="k">as</span> <span class="n">robj</span>
+<span class="kn">from</span> <span class="nn">rpy2.rlike.container</span> <span class="kn">import</span> <span class="n">TaggedList</span>
+<span class="c"># rpy2.robjects.numpy2ri.activate()</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">BetteR</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">_setdefaults</span><span class="p">(</span><span class="n">toupdate</span><span class="p">,</span> <span class="n">defaults</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; calls dict.setdefault() multiple times &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">toupdate</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+<div class="viewcode-block" id="plotMulti"><a class="viewcode-back" href="../../plotting.html#biorpy.plotting.plotMulti">[docs]</a><span class="k">def</span> <span class="nf">plotMulti</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legendWhere</span><span class="o">=</span><span class="s">&quot;bottomright&quot;</span><span class="p">,</span> <span class="n">xlab</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ylab</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">plotArgs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">lineArgs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Plot multiple lines on the same axes; convenience function for calling </span>
+<span class="sd">    r.plot() and then r.lines() (possibly multiple times) and adding an r.legend()</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xs: a list of vectors of x values, one vector for each dataset to be plotted</span>
+<span class="sd">        ys: a list of vectors of y values, as above, in the same order</span>
+<span class="sd">        names: the names of each dataset, used for putting together the legend </span>
+<span class="sd">        colors: an optional list of colors (html hex style)</span>
+<span class="sd">        legendWhere: the location parameter used to specify positioning of the legend (a combination </span>
+<span class="sd">            of bottom/top and right/left)</span>
+<span class="sd">        plotArgs: an optional dictionary of arguments to r.plot(), for example xlim=[0,3]</span>
+<span class="sd">        lineArgs: an option dictionary of arguments to r.lines()</span>
+<span class="sd">        kwdArgs: optional R plotting arguments can be passed in as keyword arguments [ie, plotMulti(xs, ys, names, lty=3)]</span>
+<span class="sd">            to specify parameters for both the r.plot() and r.lines() commands</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ys</span><span class="p">):</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">xs</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">))]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;green&quot;</span><span class="p">,</span> <span class="s">&quot;orange&quot;</span><span class="p">,</span> <span class="s">&quot;brown&quot;</span><span class="p">,</span> <span class="s">&quot;purple&quot;</span><span class="p">,</span> <span class="s">&quot;black&quot;</span><span class="p">]</span>
+
+    <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">ys</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">ys</span><span class="p">)]</span>
+    <span class="n">xlim</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">plotArgs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="n">plotArgs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">lineArgs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="n">lineArgs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">plotArgsDefaults</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;xlab&quot;</span><span class="p">:</span><span class="n">xlab</span><span class="p">,</span> <span class="s">&quot;ylab&quot;</span><span class="p">:</span><span class="n">ylab</span><span class="p">,</span> <span class="s">&quot;xlim&quot;</span><span class="p">:</span><span class="n">xlim</span><span class="p">,</span> <span class="s">&quot;ylim&quot;</span><span class="p">:</span><span class="n">ylim</span><span class="p">,</span> <span class="s">&quot;type&quot;</span><span class="p">:</span><span class="s">&quot;l&quot;</span><span class="p">}</span>
+    <span class="n">_setdefaults</span><span class="p">(</span><span class="n">plotArgs</span><span class="p">,</span> <span class="n">plotArgsDefaults</span><span class="p">)</span>
+    <span class="n">plotArgs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwdargs</span><span class="p">)</span>
+
+    <span class="n">lineArgsDefaults</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;type&quot;</span><span class="p">:</span><span class="s">&quot;l&quot;</span><span class="p">}</span>
+    <span class="n">_setdefaults</span><span class="p">(</span><span class="n">lineArgs</span><span class="p">,</span> <span class="n">lineArgsDefaults</span><span class="p">)</span>
+    <span class="n">lineArgs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwdargs</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">col</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">plotArgs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">lines</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">col</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)],</span> <span class="o">**</span><span class="n">lineArgs</span><span class="p">)</span>
+
+    <span class="n">r</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">legendWhere</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">lty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">lwd</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s">&quot;white&quot;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="plotWithCor"><a class="viewcode-back" href="../../plotting.html#biorpy.plotting.plotWithCor">[docs]</a><span class="k">def</span> <span class="nf">plotWithCor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;spearman&quot;</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Adds the correlation coefficient to the title of a scatterplot &quot;&quot;&quot;</span>
+    <span class="n">cor</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">cor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        
+    <span class="n">r</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="s">&quot;{} rs = {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">main</span><span class="p">,</span> <span class="n">cor</span><span class="p">),</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="plotWithFit"><a class="viewcode-back" href="../../plotting.html#biorpy.plotting.plotWithFit">[docs]</a><span class="k">def</span> <span class="nf">plotWithFit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">fitkwdargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">plotkwdargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Plots data and adds a linear best fit line to the scatterplot</span>
+
+<span class="sd">    Args</span>
+<span class="sd">        fitkwdargs: a dictionary with r.line() drawing parameters for the fit line</span>
+<span class="sd">            additional keyword arguments arg passed directly to r.plot()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span> <span class="nn">scipy.stats</span>
+    <span class="k">if</span> <span class="n">fitkwdargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">fitkwdargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">linregress</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="n">r</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="s">&quot;{} r={:.2g} p={:.2g}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">main</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">),</span> <span class="o">**</span><span class="n">plotkwdargs</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">abline</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">intercept</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">slope</span><span class="p">,</span> <span class="o">**</span><span class="n">fitkwdargs</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="errbars"><a class="viewcode-back" href="../../plotting.html#biorpy.plotting.errbars">[docs]</a><span class="k">def</span> <span class="nf">errbars</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">x_lower</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">x_upper</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y_lower</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y_upper</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Draws error bars on top of an existing plot</span>
+
+<span class="sd">    specify EITHER: (y, x_lower and x_upper) OR (x, y_lower, y_upper)</span>
+<span class="sd">    y: the y coordinate of each data point</span>
+<span class="sd">    x_lower: the left coordinate of the error bar</span>
+<span class="sd">    x_upper: the right coordinate of the error bar</span>
+
+<span class="sd">    similarly for `x`, `y_lower` and `y_upper`</span>
+<span class="sd">    uses the r.arrows() command, and passes any additional keyword args to r.arrows()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span>  <span class="n">x_lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>  <span class="ow">and</span> <span class="n">x_upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">arrows</span><span class="p">(</span><span class="n">x_lower</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_upper</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">angle</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">length</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">y_lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">y_upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">arrows</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_lower</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_upper</span><span class="p">,</span> <span class="n">angle</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">length</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;must define either (y, x_lower, x_upper) or (x, y_lower, y_upper)&quot;</span><span class="p">)</span>
+            
+    
+</div>
+<div class="viewcode-block" id="ecdf"><a class="viewcode-back" href="../../plotting.html#biorpy.plotting.ecdf">[docs]</a><span class="k">def</span> <span class="nf">ecdf</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;orange&quot;</span><span class="p">,</span> <span class="s">&quot;violet&quot;</span><span class="p">,</span> <span class="s">&quot;green&quot;</span><span class="p">,</span> <span class="s">&quot;brown&quot;</span><span class="p">],</span>
+         <span class="n">xlab</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ylab</span><span class="o">=</span><span class="s">&quot;cumulative fraction&quot;</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">legendWhere</span><span class="o">=</span><span class="s">&quot;topleft&quot;</span><span class="p">,</span> 
+         <span class="n">lty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">lwd</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">ecdfKwdArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Take a list of lists, convert them to vectors, and plots them sequentially on a CDF &quot;&quot;&quot;</span>
+
+    <span class="c">#print &quot;MEANS:&quot;, main</span>
+    <span class="c">#for vector, label in zip(convertToVectors, labels):</span>
+    <span class="c">#    print label, numpy.mean(vector)</span>
+    
+    <span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">iter</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">item</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
+            
+    
+    <span class="n">lty</span> <span class="o">=</span> <span class="n">_expand</span><span class="p">(</span><span class="n">lty</span><span class="p">)</span>
+    <span class="n">lwd</span> <span class="o">=</span> <span class="n">_expand</span><span class="p">(</span><span class="n">lwd</span><span class="p">)</span>
+
+    <span class="n">ecdfKwdArgs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;verticals&quot;</span><span class="p">:</span><span class="bp">True</span><span class="p">,</span> <span class="s">&quot;do.points&quot;</span><span class="p">:</span><span class="bp">False</span><span class="p">,</span> <span class="s">&quot;col.hor&quot;</span><span class="p">:</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;col.vert&quot;</span><span class="p">:</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;lty&quot;</span><span class="p">:</span><span class="n">lty</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;lwd&quot;</span><span class="p">:</span><span class="n">lwd</span><span class="p">[</span><span class="mi">0</span><span class="p">]})</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="s">&quot;xlim&quot;</span> <span class="ow">in</span> <span class="n">ecdfKwdArgs</span> <span class="ow">or</span> <span class="n">ecdfKwdArgs</span><span class="p">[</span><span class="s">&quot;xlim&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">xlim</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span> <span class="k">for</span> <span class="n">vector</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">),</span>
+                <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span> <span class="k">for</span> <span class="n">vector</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">)]</span>
+        <span class="n">ecdfKwdArgs</span><span class="p">[</span><span class="s">&quot;xlim&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xlim</span>
+
+    <span class="n">r</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">ecdf</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">main</span><span class="o">=</span><span class="n">main</span><span class="p">,</span> <span class="n">xlab</span><span class="o">=</span><span class="n">xlab</span><span class="p">,</span> <span class="n">ylab</span><span class="o">=</span><span class="n">ylab</span><span class="p">,</span> <span class="o">**</span><span class="n">ecdfKwdArgs</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">vector</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">ecdf</span><span class="p">(</span><span class="n">vector</span><span class="p">),</span> <span class="n">add</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                    <span class="o">**</span><span class="p">{</span><span class="s">&quot;verticals&quot;</span><span class="p">:</span><span class="bp">True</span><span class="p">,</span> <span class="s">&quot;do.points&quot;</span><span class="p">:</span><span class="bp">False</span><span class="p">,</span> <span class="s">&quot;col.hor&quot;</span><span class="p">:</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="s">&quot;col.vert&quot;</span><span class="p">:</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span>
+                       <span class="s">&quot;lty&quot;</span><span class="p">:</span><span class="n">lty</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="s">&quot;lwd&quot;</span><span class="p">:</span><span class="n">lwd</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]})</span>
+
+    <span class="n">labelsWithN</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="n">labelsWithN</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="o">+</span><span class="s">&quot; (n=</span><span class="si">%d</span><span class="s">)&quot;</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">legendWhere</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">labelsWithN</span><span class="p">,</span> <span class="n">lty</span><span class="o">=</span><span class="n">lty</span><span class="p">,</span> <span class="n">lwd</span><span class="o">=</span><span class="p">[</span><span class="n">lwdi</span><span class="o">*</span><span class="mi">2</span> <span class="k">for</span> <span class="n">lwdi</span> <span class="ow">in</span> <span class="n">lwd</span><span class="p">],</span> <span class="n">col</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">cex</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s">&quot;white&quot;</span><span class="p">)</span>
+
+
+</div>
+<div class="viewcode-block" id="boxPlot"><a class="viewcode-back" href="../../plotting.html#biorpy.plotting.boxPlot">[docs]</a><span class="k">def</span> <span class="nf">boxPlot</span><span class="p">(</span><span class="n">dict_</span><span class="p">,</span> <span class="n">keysInOrder</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Plot a boxplot</span>
+
+<span class="sd">    dict_: a dictionary of group_name -&gt; vector, where vector is the data points to be plotted for each group;</span>
+<span class="sd">        use a collections.OrderedDict() to easily convey the order of the groups</span>
+<span class="sd">    keysInOrder: an optional ordering of the keys in dict_ (alternate option to using collections.OrderedDict)</span>
+
+<span class="sd">    additional ``kwdargs`` are passed directly to ``r.boxplot()``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">keysInOrder</span><span class="p">:</span>
+        <span class="n">keysInOrder</span> <span class="o">=</span> <span class="n">dict_</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        
+    <span class="n">t</span> <span class="o">=</span> <span class="n">TaggedList</span><span class="p">([])</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keysInOrder</span><span class="p">:</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">robj</span><span class="o">.</span><span class="n">FloatVector</span><span class="p">(</span><span class="n">dict_</span><span class="p">[</span><span class="n">key</span><span class="p">]),</span> <span class="s">&quot;X:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">keysInOrder</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+</div>
+<div class="viewcode-block" id="barPlot"><a class="viewcode-back" href="../../plotting.html#biorpy.plotting.barPlot">[docs]</a><span class="k">def</span> <span class="nf">barPlot</span><span class="p">(</span><span class="n">dict_</span><span class="p">,</span> <span class="n">keysInOrder</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">printCounts</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Plot a bar plot</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dict_: a dictionary of name -&gt; value, where value is the height of the bar</span>
+<span class="sd">            use a collections.OrderedDict() to easily convey the order of the groups</span>
+<span class="sd">        keysInOrder: an optional ordering of the keys in dict_ (alternate option to using collections.OrderedDict)</span>
+<span class="sd">        printCounts: option to print the counts on top of each bar</span>
+
+<span class="sd">    additional kwdargs are passed directly to r.barplot()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">keysInOrder</span><span class="p">:</span>
+        <span class="n">keysInOrder</span> <span class="o">=</span> <span class="n">dict_</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    
+    <span class="n">heights</span> <span class="o">=</span> <span class="p">[</span><span class="n">dict_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keysInOrder</span><span class="p">]</span>
+
+    <span class="n">kwdargs</span><span class="p">[</span><span class="s">&quot;names.arg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">keysInOrder</span>
+
+    <span class="k">if</span> <span class="n">ylim</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">printCounts</span><span class="p">:</span>
+            <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">heights</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">heights</span><span class="p">)</span><span class="o">*</span><span class="mf">1.1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">heights</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">heights</span><span class="p">)]</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">heights</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">printCounts</span><span class="p">:</span>
+        <span class="n">heightsStrings</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;{:.2g}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="k">for</span> <span class="n">height</span> <span class="ow">in</span> <span class="n">heights</span><span class="p">]</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">heightsStrings</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+
+</div>
+<div class="viewcode-block" id="scatterplotMatrix"><a class="viewcode-back" href="../../plotting.html#biorpy.plotting.scatterplotMatrix">[docs]</a><span class="k">def</span> <span class="nf">scatterplotMatrix</span><span class="p">(</span><span class="n">dataFrame</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwdargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Plots a scatterplot matrix, with scatterplots in the upper left and correlation</span>
+<span class="sd">    values in the lower right. Input is a pandas DataFrame.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">robj</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">library</span><span class="p">(</span><span class="s">&quot;lattice&quot;</span><span class="p">)</span>
+
+    <span class="n">taggedList</span> <span class="o">=</span> <span class="n">TaggedList</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">robj</span><span class="o">.</span><span class="n">FloatVector</span><span class="p">,</span> <span class="p">[</span><span class="n">dataFrame</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dataFrame</span><span class="o">.</span><span class="n">columns</span><span class="p">]),</span> <span class="n">dataFrame</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+    <span class="c">#print taggedList</span>
+    <span class="c">#df = robj.r[&#39;data.frame&#39;](**datapointsDict)</span>
+    <span class="c">#df = robj.r[&#39;data.frame&#39;](taggedList)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">robj</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">taggedList</span><span class="p">)</span>
+    <span class="c">#print df</span>
+    <span class="c">#robj.r.splom(df)</span>
+    <span class="c">#robj.r.pairs(df)</span>
+
+    <span class="n">robj</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="s">&quot;&quot;&quot;panel.cor &lt;- function(x, y, digits=2, prefix=&quot;&quot;, cex.cor)</span>
+<span class="s">    {</span>
+<span class="s">        usr &lt;- par(&quot;usr&quot;); on.exit(par(usr))</span>
+<span class="s">        par(usr = c(0, 1, 0, 1))</span>
+<span class="s">        r &lt;- cor(x, y, method=&quot;spearman&quot;)</span>
+<span class="s">        scale = abs(r)*0.8+0.2</span>
+<span class="s">        txt &lt;- format(c(r, 0.123456789), digits=digits)[1]</span>
+<span class="s">        txt &lt;- paste(prefix, txt, sep=&quot;&quot;)</span>
+<span class="s">        if(missing(cex.cor)) cex.cor &lt;- 0.8/strwidth(txt)</span>
+<span class="s">        text(0.5, 0.5, txt, cex = cex.cor * scale+0.2)</span>
+<span class="s">    }</span>
+<span class="s">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">robj</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="s">&quot;&quot;&quot;panel.hist &lt;- function(x, ...)</span>
+<span class="s">    {</span>
+<span class="s">        usr &lt;- par(&quot;usr&quot;); on.exit(par(usr))</span>
+<span class="s">        par(usr = c(usr[1:2], 0, 1.5) )</span>
+<span class="s">        h &lt;- hist(x, plot = FALSE)</span>
+<span class="s">        breaks &lt;- h$breaks; nB &lt;- length(breaks)</span>
+<span class="s">        y &lt;- h$counts; y &lt;- y/max(y)</span>
+<span class="s">        rect(breaks[-nB], 0, breaks[-1], y, col=&quot;lightgrey&quot;, ...)</span>
+<span class="s">    }&quot;&quot;&quot;</span><span class="p">)</span>
+                                        
+
+    <span class="n">additionalParams</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;upper.panel&quot;</span><span class="p">:</span> <span class="n">robj</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="s">&quot;panel.smooth&quot;</span><span class="p">],</span> <span class="s">&quot;lower.panel&quot;</span><span class="p">:</span> <span class="n">robj</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="s">&quot;panel.cor&quot;</span><span class="p">],</span> <span class="s">&quot;diag.panel&quot;</span><span class="p">:</span><span class="n">robj</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="s">&quot;panel.hist&quot;</span><span class="p">]}</span>
+    <span class="n">additionalParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwdargs</span><span class="p">)</span>
+    <span class="n">robj</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="s">&quot;pairs&quot;</span><span class="p">](</span><span class="n">df</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="n">main</span><span class="p">,</span> <span class="o">**</span><span class="n">additionalParams</span><span class="p">)</span>
+
+</div>
+<span class="k">def</span> <span class="nf">plotWithSolidErrbars</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">errbarcol</span><span class="o">=</span><span class="s">&quot;lightgray&quot;</span><span class="p">,</span> <span class="n">plotargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">polygonargs</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">errbarx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">errbary</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">add</span><span class="p">:</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">&quot;n&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">plotargs</span><span class="p">)</span>
+
+    <span class="n">polygondefaults</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;border&quot;</span><span class="p">:</span><span class="s">&quot;NA&quot;</span><span class="p">}</span>
+    <span class="n">polygonargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">polygondefaults</span><span class="p">)</span>
+
+    <span class="n">r</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">errbarx</span><span class="p">,</span> <span class="n">errbary</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">errbarcol</span><span class="p">,</span> <span class="o">**</span><span class="n">polygonargs</span><span class="p">)</span>
+
+    <span class="n">r</span><span class="o">.</span><span class="n">lines</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">plotargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">errbarx</span><span class="p">,</span> <span class="n">errbary</span>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Noah Spies, Yarden Katz.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
